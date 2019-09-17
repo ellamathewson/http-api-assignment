@@ -1,14 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+  
+  const parseJSON = (xhr, content) => {
+      if(xhr.response) {
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+
+        if(obj.message) {
+          content.innerHTML += `<p>Message: ${obj.message}</p>`;
+        }
+      }
+    };
+
+    const handleResponse = (xhr, parseResponse) => {
+      const content = document.querySelector('#content');
+      const type = document.querySelector('#type');
+      const typeSelected = type.options[type.selectedIndex].value;
+
+      if(typeSelected === 'application/json') {
+        console.dir('JSON');
+      } else {
+        console.dir('xml');
+      }
+      
+      switch(xhr.status) {
+        case 200:
+          content.innerHTML = '<b>Success</b>';
+          break;
+        case 400:
+          content.innerHTML = '<b>Bad Request</b>';
+          break;
+        case 401:
+          content.innerHTML = '<b>Unauthorized</b>';
+          break;
+        case 403:
+          content.innerHTML = '<b>Forbidden</b>';
+          break;
+        case 500:
+          content.innerHTML = '<b>Internal Server Error</b>';
+          break;
+        case 501:
+          content.innerHTML = '<b>Not Implemented</b>';
+          break;
+        default:
+          content.innerHTML = '<b>Resource Not Found</b>';
+          break;
+      }
+
+      parseJSON(xhr, content);
+    };
+
+    const sendAjax = (url) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('GET', url);
+      xhr.setRequestHeader ("Accept", 'application/json');
+
+      xhr.onload = () => handleResponse(xhr);
+      xhr.send();
+    };
+
+    const init = () => {
+      const pageButton = document.querySelector("#send");
+
+      const success = () => sendAjax('/sucess');
+      const badRequest = () => sendAjax('/badRequest');
+      const unauthorized = () => sendAjax('/unauthorized');
+      const forbidden = () => sendAjax('/forbidden');
+      const internal = () => sendAjax('/internal');
+      const notImplemented = () => sendAjax('/notImplemented');
+      const notFound = () => sendAjac('/notFound');
+
+      pageButton.addEventListener('click', success);
+    }
+
+    window.onload = init;
+
 
   </script>
 </head>
+
 <body>
   <section id="top">
     <h3>Status Code Tests</h3>
@@ -30,4 +108,5 @@
   <section id="content">
   </section>
 </body>
+
 </html>
