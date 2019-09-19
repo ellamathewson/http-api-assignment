@@ -22,7 +22,6 @@ const respondJSONMeta = (request, response, status) => {
 };
 
 const success = (request, response) => {
-  console.dir('success');
   const responseJSON = {
     message: 'This is a successful response',
     id: 'successResponse',
@@ -32,14 +31,55 @@ const success = (request, response) => {
 
 const successMeta = (request, response) => respondJSONMeta(request, response, 200);
 
-const updateUser = (request, response) => {
-  const newUser = {
-    createdAt: Date.now(),
+const badRequest = (request, response) => {
+  const responseJSON = {
+    message: 'Missing valid query parameter set to true',
+    id: 'badResponse',
   };
-
-  users[newUser.createdAt] = newUser;
-  return respondJSON(request, response, 201, newUser);
+  return respondJSON(request, response, 400, responseJSON);
 };
+
+const badRequestMeta = (request, response) => respondJSONMeta(request, response, 400);
+
+const unauthorized = (request, response) => {
+  const responseJSON = {
+    message: 'Missing logedIn query parameter set to yes',
+    id: 'unauthorized',
+  };
+  return respondJSON(request, response, 401, responseJSON);
+};
+
+const unauthorizedMeta = (request, response) => respondJSONMeta(request, response, 401);
+
+const forbidden = (request, response) => {
+  const responseJSON = {
+    message: 'You do not have access to this content',
+    id: 'youShallNotPass',
+  };
+  return respondJSON(request, response, 403, responseJSON);
+};
+
+const forbiddenMeta = (request, response) => respondJSONMeta(request, response, 403);
+
+const internalError = (request, response) => {
+  const responseJSON = {
+    message: 'Internal Server Error. Something went wrong',
+    id: 'youShallNotPass',
+  };
+  return respondJSON(request, response, 500, responseJSON);
+};
+
+const internalErrornMeta = (request, response) => respondJSONMeta(request, response, 500);
+
+const notImplemented = (request, response) => {
+  const responseJSON = {
+    message: 'A get request for this page has not been implemented yet. Check again later for updated content',
+    id: 'notImplemented',
+  };
+  return respondJSON(request, response, 501, responseJSON);
+};
+
+const notImplementedMeta = (request, response) => respondJSONMeta(request, response, 501);
 
 const notFound = (request, response) => {
   const responseJSON = {
@@ -54,7 +94,16 @@ const notFoundMeta = (request, response) => respondJSONMeta(request, response, 4
 module.exports = {
   success,
   successMeta,
-  updateUser,
+  badRequest,
+  badRequestMeta,
+  unauthorized,
+  unauthorizedMeta,
+  forbidden,
+  forbiddenMeta,
+  internalError,
+  internalErrornMeta,
+  notImplemented,
+  notImplementedMeta,
   notFound,
   notFoundMeta,
 };

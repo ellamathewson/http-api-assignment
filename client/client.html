@@ -10,7 +10,7 @@
 
   const parseJSON = (xhr, content) => {
       if(xhr.response) {
-        console.dir('client page xhr response');
+        //console.dir('client page xhr response');
         const obj = JSON.parse(xhr.response);
         console.dir(obj);
 
@@ -27,6 +27,7 @@
 
       if(typeSelected === 'application/json') {
         //console.dir('JSON');
+        console.dir(xhr)
         const obj = JSON.parse(xhr.response);
         switch(xhr.status) {
         case 200:
@@ -77,12 +78,18 @@
       const pageButton = document.querySelector("#send");
 
       const pageType = document.querySelector('#page');
-      const pageSelected = pageType.options[pageType.selectedIndex].value;
+      let pageSelected = pageType.options[pageType.selectedIndex].value;
 
       const sendRequest = () => {
+        console.dir(pageSelected);
         sendAjax(pageSelected);
-      }
+      };
 
+      const grabSelector = () => {
+        pageSelected = pageType.options[pageType.selectedIndex].value;
+      };
+
+      pageType.addEventListener('click', grabSelector);
       pageButton.addEventListener('click', sendRequest);
 
     }
