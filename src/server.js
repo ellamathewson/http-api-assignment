@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const http = require('http');
 const url = require('url');
 const htmlHandler = require('./htmlResponses.js');

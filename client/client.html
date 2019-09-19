@@ -7,17 +7,18 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
-  
-  const parseJSON = (xhr, content) => {
-      if(xhr.response) {
-        const obj = JSON.parse(xhr.response);
-        console.dir(obj);
 
-        if(obj.message) {
-          content.innerHTML += `<p>Message: ${obj.message}</p>`;
-        }
-      }
-    };
+  // const parseJSON = (xhr, content) => {
+  //     if(xhr.response) {
+  //       console.log('client page xhr response');
+  //       const obj = JSON.parse(xhr.response);
+  //       console.dir("object = " + obj);
+
+  //       if(obj.message) {
+  //         content.innerHTML += `<p>Message: ${obj.message}</p>`;
+  //       }
+  //     }
+  //   };
 
     const handleResponse = (xhr, parseResponse) => {
       const content = document.querySelector('#content');
@@ -26,11 +27,8 @@
 
       if(typeSelected === 'application/json') {
         console.dir('JSON');
-      } else {
-        console.dir('xml');
-      }
-      
-      switch(xhr.status) {
+        const obj = JSON.parse(xhr.response);
+        switch(xhr.status) {
         case 200:
           content.innerHTML = '<b>Success</b>';
           break;
@@ -54,35 +52,74 @@
           break;
       }
 
+      if(obj.message) {
+        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+      }
+
+      } else {
+        console.dir('xml');
+      }
+
       parseJSON(xhr, content);
     };
 
     const sendAjax = (url) => {
       const xhr = new XMLHttpRequest();
-
       xhr.open('GET', url);
-      xhr.setRequestHeader ("Accept", 'application/json');
+      xhr.sendRequestHeader("Accept", "application/json");
 
       xhr.onload = () => handleResponse(xhr);
       xhr.send();
-    };
+    }
+
+    // const sendAjax = (url) => {
+    //   const xhr = new XMLHttpRequest();
+
+    //   xhr.open('GET', url);
+    //   console.dir("url = " + url);
+    //   xhr.setRequestHeader ("Accept", 'application/json');
+
+    //   xhr.onload = () => handleResponse(xhr);
+    //   xhr.send();
+    // };
+
 
     const init = () => {
       const pageButton = document.querySelector("#send");
 
-      const success = () => sendAjax('/sucess');
-      const badRequest = () => sendAjax('/badRequest');
-      const unauthorized = () => sendAjax('/unauthorized');
-      const forbidden = () => sendAjax('/forbidden');
-      const internal = () => sendAjax('/internal');
-      const notImplemented = () => sendAjax('/notImplemented');
-      const notFound = () => sendAjac('/notFound');
+      const pageType = document.querySelector('#page');
+      const pageSelected = type.options[type.selectedIndex].value;
+
+      switch(pageSelected) {
+        case '/success':
+          const success = () => sendAjax('/sucess');
+          console.log('check page success');
+          break;
+        case '/badRequest':
+          const badRequest = () => sendAjax('/badRequest');
+          break;
+        case '/unauthorized':
+          const unauthorized = () => sendAjax('/unauthorized');
+          break;
+        case '/forbidden':
+          const forbidden = () => sendAjax('/forbidden');
+          break;
+        case '/internal':
+          const internal = () => sendAjax('/internal');
+          break;
+        case '/notImplemented':
+          const notImplemented = () => sendAjax('/notImplemented');
+          break;
+        case '/notFound':
+          const notFound = () => sendAjax('/notFound');
+          break;
+      };
 
       pageButton.addEventListener('click', success);
+
     }
 
     window.onload = init;
-
 
   </script>
 </head>
