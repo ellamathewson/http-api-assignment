@@ -7,28 +7,28 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const urlStruct = {
-  GET: {
-    '/': htmlHandler.getIndex,
-    '/style.css': htmlHandler.getCSS,
-    '/success': jsonHandler.success,
-    '/badRequest': jsonHandler.badRequest,
-    '/unauthorized': jsonHandler.unauthorized,
-    '/forbidden': jsonHandler.forbidden,
-    '/internal': jsonHandler.internalError,
-    '/notImplemented': jsonHandler.notImplemented,
-    notFound: jsonHandler.notFound,
-  },
-  HEAD: {
-    '/success': jsonHandler.successMeta,
-    '/badRequest': jsonHandler.badRequestMeta,
-    '/unauthorized': jsonHandler.unauthorizedMeta,
-    '/forbidden': jsonHandler.forbiddenMeta,
-    '/internal': jsonHandler.internalErrornMeta,
-    '/notImplemented': jsonHandler.notImplementedMeta,
-    notFound: jsonHandler.notFoundMeta,
-  },
-};
+// const urlStruct = {
+//   GET: {
+//     '/': htmlHandler.getIndex,
+//     '/style.css': htmlHandler.getCSS,
+//     '/success': jsonHandler.success,
+//     '/badRequest': jsonHandler.badRequest,
+//     '/unauthorized': jsonHandler.unauthorized,
+//     '/forbidden': jsonHandler.forbidden,
+//     '/internal': jsonHandler.internalError,
+//     '/notImplemented': jsonHandler.notImplemented,
+//     notFound: jsonHandler.notFound,
+//   },
+//   HEAD: {
+//     '/success': jsonHandler.successMeta,
+//     '/badRequest': jsonHandler.badRequestMeta,
+//     '/unauthorized': jsonHandler.unauthorizedMeta,
+//     '/forbidden': jsonHandler.forbiddenMeta,
+//     '/internal': jsonHandler.internalErrornMeta,
+//     '/notImplemented': jsonHandler.notImplementedMeta,
+//     notFound: jsonHandler.notFoundMeta,
+//   },
+// };
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
