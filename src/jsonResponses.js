@@ -30,22 +30,36 @@ const success = (request, response) => {
 
 const successMeta = (request, response) => respondJSONMeta(request, response, 200);
 
-const badRequest = (request, response) => {
+const badRequest = (request, response, params) => {
   const responseJSON = {
-    message: 'Missing valid query parameter set to true',
-    id: 'badResponse',
+    message: 'This is a successful response with required parameters',
+    id: 'successWithParams',
   };
-  return respondJSON(request, response, 400, responseJSON);
+
+  if (!params.valid || params.valid !== 'true') {
+    responseJSON.message = 'Missing valid query parameter set to true';
+    responseJSON.id = 'badResponse';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  return respondJSON(request, response, 200, responseJSON);
 };
 
 const badRequestMeta = (request, response) => respondJSONMeta(request, response, 400);
 
-const unauthorized = (request, response) => {
+const unauthorized = (request, response, params) => {
   const responseJSON = {
-    message: 'Missing logedIn query parameter set to yes',
-    id: 'unauthorized',
+    message: 'Successful response with parameters',
+    id: 'successWithParamsAuthorized',
   };
-  return respondJSON(request, response, 401, responseJSON);
+
+  if (!params.valid || params.valid !== 'true') {
+    respondJSON.message = 'Missing logedIn query parameter set to yes';
+    respondJSON.id = 'unauthorized';
+    return respondJSON(request, response, 401, responseJSON);
+  }
+
+  return respondJSON(request, response, 200, responseJSON);
 };
 
 const unauthorizedMeta = (request, response) => respondJSONMeta(request, response, 401);
