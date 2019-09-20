@@ -3,32 +3,45 @@
 /* eslint-disable linebreak-style */
 // Note this object is purely in memory
 
-const respondJSON = (request, response, status, object) => {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  response.writeHead(status, headers);
-  response.write(JSON.stringify(object));
+const respond = (request, response, status, content, type) => {
+  response.writeHead(status, { 'Content-Type': type });
+  response.write(content);
   response.end();
 };
 
-const respondJSONMeta = (request, response, status) => {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  response.writeHead(status, headers);
-  response.end();
+// const respondJSON = (request, response, status, object) => {
+//   // const headers = {
+//   //   'Content-Type': 'application/json',
+//   // };
+//   // response.writeHead(status, headers);
+//   // response.write(JSON.stringify(object));
+//   // response.end();
+// };
+
+const respondXML = (request, response, status, object) => {
+  let responseXML = '<response>';
+  responseXML = `${responseXML}<message>${object.message}</message>`;
+  responseXML = `${responseXML}</response>`;
+  console.dir(responseXML);
+
+  return respond(request, response, status, responseXML, 'text/xml');
 };
 
-const success = (request, response) => {
+const success = (request, response, acceptedTypes) => {
   const responseJSON = {
     message: 'This is a successful response',
     id: 'successResponse',
   };
-  return respondJSON(request, response, 200, responseJSON);
+
+  console.dir(acceptedTypes[0]);
+  if (acceptedTypes[0] === 'text/xml') {
+    // console.dir('xml');
+    return respondXML(request, response, 200, responseJSON);
+  }
+  const objectString = JSON.stringify(responseJSON);
+  return respond(request, response, 200, objectString, 'application/json');
 };
 
-const successMeta = (request, response) => respondJSONMeta(request, response, 200);
 
 const badRequest = (request, response, params) => {
   const responseJSON = {
@@ -39,13 +52,11 @@ const badRequest = (request, response, params) => {
   if (!params.valid || params.valid !== 'true') {
     responseJSON.message = 'Missing valid query parameter set to true';
     responseJSON.id = 'badResponse';
-    return respondJSON(request, response, 400, responseJSON);
+    return respond(request, response, responseJSON, 'application/json');
   }
 
-  return respondJSON(request, response, 200, responseJSON);
+  return respond(request, response, 200, responseJSON);
 };
-
-const badRequestMeta = (request, response) => respondJSONMeta(request, response, 400);
 
 const unauthorized = (request, response, params) => {
   const responseJSON = {
@@ -54,69 +65,71 @@ const unauthorized = (request, response, params) => {
   };
 
   if (!params.valid || params.valid !== 'true') {
-    respondJSON.message = 'Missing logedIn query parameter set to yes';
-    respondJSON.id = 'unauthorized';
-    return respondJSON(request, response, 401, responseJSON);
+    responseJSON.message = 'Missing logedIn query parameter set to yes';
+    responseJSON.id = 'unauthorized';
+    return respond(request, response, responseJSON, 'application/json');
   }
 
-  return respondJSON(request, response, 200, responseJSON);
+  return respond(request, response, responseJSON, 'application/json');
 };
 
-const unauthorizedMeta = (request, response) => respondJSONMeta(request, response, 401);
 
 const forbidden = (request, response) => {
   const responseJSON = {
     message: 'You do not have access to this content',
     id: 'youShallNotPass',
   };
-  return respondJSON(request, response, 403, responseJSON);
+  return respond(request, response, responseJSON, 'application/json');
 };
 
-const forbiddenMeta = (request, response) => respondJSONMeta(request, response, 403);
 
 const internalError = (request, response) => {
   const responseJSON = {
     message: 'Internal Server Error. Something went wrong',
     id: 'youShallNotPass',
   };
-  return respondJSON(request, response, 500, responseJSON);
+  return respond(request, response, responseJSON, 'application/json');
 };
-
-const internalErrornMeta = (request, response) => respondJSONMeta(request, response, 500);
 
 const notImplemented = (request, response) => {
   const responseJSON = {
     message: 'A get request for this page has not been implemented yet. Check again later for updated content',
     id: 'notImplemented',
   };
-  return respondJSON(request, response, 501, responseJSON);
+  return respond(request, response, responseJSON, 'application/json');
 };
 
-const notImplementedMeta = (request, response) => respondJSONMeta(request, response, 501);
 
 const notFound = (request, response) => {
   const responseJSON = {
     message: 'the page you are looking for is not found',
     id: 'notFound',
   };
-  return respondJSON(request, response, 404, responseJSON);
+  return respond(request, response, responseJSON, 'application/json');
 };
 
-const notFoundMeta = (request, response) => respondJSONMeta(request, response, 404);
 
 module.exports = {
   success,
-  successMeta,
   badRequest,
-  badRequestMeta,
   unauthorized,
-  unauthorizedMeta,
   forbidden,
-  forbiddenMeta,
   internalError,
-  internalErrornMeta,
   notImplemented,
-  notImplementedMeta,
   notFound,
-  notFoundMeta,
 };
+
+/*
+
+const respondJSONMeta = (request, response, status) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  response.writeHead(status, headers);
+  response.end();
+};
+
+const successMeta = (request, response) => respondJSONMeta(request, response, 200);
+
+
+*/

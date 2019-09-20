@@ -65,8 +65,6 @@
           break;
       }
 
-      const p = document.createElement('p');
-
       if(typeSelected === 'application/json') {
         //console.dir('JSON');
         parseJSON(xhr, content);
@@ -81,7 +79,10 @@
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url);
       //console.dir("url = " + url);
-      xhr.setRequestHeader("Accept", "application/json");
+      const responseType = document.querySelector('#type');
+      const typeSelected = responseType.options[responseType.selectedIndex].value;
+
+      xhr.setRequestHeader("Accept", typeSelected);
 
       xhr.onload = () => handleResponse(xhr);
       xhr.send();

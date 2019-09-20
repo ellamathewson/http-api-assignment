@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
 const http = require('http');
 const url = require('url');
@@ -34,6 +35,8 @@ const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   const params = query.parse(parsedUrl.query);
 
+  const acceptedTypes = request.headers.accept.split(',');
+
   // console.dir(request.method);
   // console.dir(`parsed url ${parsedUrl}`);
   switch (parsedUrl.pathname) {
@@ -44,7 +47,7 @@ const onRequest = (request, response) => {
       htmlHandler.getCSS(request, response);
       break;
     case '/success':
-      jsonHandler.success(request, response);
+      jsonHandler.success(request, response, acceptedTypes);
       break;
     case '/badRequest':
       jsonHandler.badRequest(request, response, params);
