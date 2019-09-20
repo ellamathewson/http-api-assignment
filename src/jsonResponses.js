@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* eslint-disable linebreak-style */
 // Note this object is purely in memory
-const users = {};
 
 const respondJSON = (request, response, status, object) => {
   const headers = {

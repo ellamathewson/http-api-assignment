@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const http = require('http');
 const url = require('url');
+const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
@@ -19,19 +20,57 @@ const urlStruct = {
     notFound: jsonHandler.notFound,
   },
   HEAD: {
-    '/getUsers': jsonHandler.successMeta,
+    '/success': jsonHandler.successMeta,
+    '/badRequest': jsonHandler.badRequestMeta,
+    '/unauthorized': jsonHandler.unauthorizedMeta,
+    '/forbidden': jsonHandler.forbiddenMeta,
+    '/internal': jsonHandler.internalErrornMeta,
+    '/notImplemented': jsonHandler.notImplementedMeta,
     notFound: jsonHandler.notFoundMeta,
   },
 };
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
+  const params = query.parse(parsedUrl.query);
 
   console.dir(request.method);
-  console.dir(parsedUrl);
+  // console.dir(`parsed url ${parsedUrl}`);
+  // switch (parsedUrl.pathname) {
+  //   case '/':
+  //     htmlHandler.getIndex(request, response);
+  //     break;
+  //   case '/style.css':
+  //     htmlHandler.getCSS(request, response);
+  //     break;
+  //   case '/success':
+  //     jsonHandler.success(request, response);
+  //     break;
+  //   case '/badRequest':
+  //     jsonHandler.badRequest(request, response, params);
+  //     break;
+  //   case '/unauthorized':
+  //     jsonHandler.unauthorized(request, response, params);
+  //     break;
+  //   case '/forbidden':
+  //     jsonHandler.forbidden(request, response, params);
+  //     break;
+  //   case '/internal':
+  //     jsonHandler.forbidden(request, response);
+  //     break;
+  //   case '/notImplemented':
+  //     jsonHandler.notImplemented(request, response);
+  //     break;
+  //   case '/notFound':
+  //     jsonHandler.notFound(request, response);
+  //     break;
+  //   default:
+  //     htmlHandler.getIndex(request, response);
+  //     break;
+  // }
 
   if (urlStruct[request.method][parsedUrl.pathname]) {
-    urlStruct[request.method][parsedUrl.pathname](request, response);
+    urlStruct[request.method][parsedUrl.pathname](request, response, params);
   } else {
     urlStruct.GET.notFound(request, response);
   }

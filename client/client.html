@@ -8,28 +8,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
-  const parseJSON = (xhr, content) => {
-      if(xhr.response) {
-        //console.dir('client page xhr response');
-        const obj = JSON.parse(xhr.response);
-        console.dir(obj);
+  // const parseJSON = (xhr, content) => {
+  //     if(xhr.response) {
+  //       //console.dir('client page xhr response');
+  //       const obj = JSON.parse(xhr.response);
+  //       console.dir(obj);
 
-        if(obj.message) {
-          content.innerHTML += `<p>Message: ${obj.message}</p>`;
-        }
-      }
-    };
+  //       if(obj.message) {
+  //         content.innerHTML += `<p>Message: ${obj.message}</p>`;
+  //       }
+  //     }
+  //   };
 
-    const handleResponse = (xhr, parseResponse) => {
+    const handleResponse = (xhr) => {
       const content = document.querySelector('#content');
-      const type = document.querySelector('#type');
-      const typeSelected = type.options[type.selectedIndex].value;
+      const responseType = document.querySelector('#type');
+      const typeSelected = responseType.options[responseType.selectedIndex].value;
+      const type = xhr.getResponseHeader('content-type');
 
-      if(typeSelected === 'application/json') {
-        //console.dir('JSON');
-        console.dir(xhr)
-        const obj = JSON.parse(xhr.response);
-        switch(xhr.status) {
+      switch(xhr.status) {
         case 200:
           content.innerHTML = '<b>Success</b>';
           break;
@@ -53,15 +50,21 @@
           break;
       }
 
-      if(obj.message) {
-        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+      const p = document.createElement('p');
+
+      if(typeSelected === 'application/json') {
+        //console.dir('JSON');
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+        p.textContent = `Message: ${obj.message}`;
+
+      } else if (typeSelected === 'application/xml') {
+        console.dir('xml ' + xhr.responseXML);
+        const message = xhr.responseXML.querySelector('message').textContent;
+        p.textContent `Message: ${message}`;
       }
 
-      } else {
-        //console.dir('xml');
-      }
-
-      parseJSON(xhr, content);
+      content.appendChild(p);
     };
 
     const sendAjax = (url) => {
