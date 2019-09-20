@@ -33,7 +33,7 @@ const success = (request, response, acceptedTypes) => {
     id: 'successResponse',
   };
 
-  console.dir(acceptedTypes[0]);
+  // console.dir(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     // console.dir('xml');
     return respondXML(request, response, 200, responseJSON);
@@ -43,19 +43,30 @@ const success = (request, response, acceptedTypes) => {
 };
 
 
-const badRequest = (request, response, params) => {
+const badRequest = (request, response, acceptedTypes, params) => {
   const responseJSON = {
-    message: 'This is a successful response with required parameters',
-    id: 'successWithParams',
+    message: 'Successful response with parameters',
+    id: 'successParameters',
   };
 
   if (!params.valid || params.valid !== 'true') {
     responseJSON.message = 'Missing valid query parameter set to true';
     responseJSON.id = 'badResponse';
-    return respond(request, response, responseJSON, 'application/json');
+
+    if (acceptedTypes[0] === 'text/xml') {
+      // console.dir('xml');
+      return respondXML(request, response, 400, responseJSON);
+    }
+    const objectString = JSON.stringify(responseJSON);
+    return respond(request, response, 400, objectString, 'application/json');
   }
 
-  return respond(request, response, 200, responseJSON);
+  if (acceptedTypes[0] === 'text/xml') {
+    // console.dir('xml');
+    return respondXML(request, response, 400, responseJSON);
+  }
+  const objectString = JSON.stringify(responseJSON);
+  return respond(request, response, 400, objectString, 'application/json');
 };
 
 const unauthorized = (request, response, params) => {

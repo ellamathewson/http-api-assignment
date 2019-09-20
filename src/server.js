@@ -50,7 +50,8 @@ const onRequest = (request, response) => {
       jsonHandler.success(request, response, acceptedTypes);
       break;
     case '/badRequest':
-      jsonHandler.badRequest(request, response, params);
+      console.dir(`params ${params.valid}`);
+      jsonHandler.badRequest(request, response, acceptedTypes, params);
       break;
     case '/unauthorized':
       jsonHandler.unauthorized(request, response, params);

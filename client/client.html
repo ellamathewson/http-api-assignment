@@ -21,14 +21,15 @@
     };
 
   const parseXML = (xhr, content) => {
-    console.dir('in parse functrion');
+    //console.dir('in parse functrion');
     if(xhr.response) {
       const type = xhr.getResponseHeader('content-type');
 
-        console.dir("parseXML");
+        //console.dir("parseXML");
         const p = document.createElement('p');
-        console.dir(xhr.responseXML);
+        //console.dir(xhr.responseXML);
         const message = xhr.responseXML.querySelector('message').textContent;
+        //console.log(xhr.responseXML.documentElement.innerHTML);
         p.textContent = `Message: ${message}`;
         content.appendChild(p);
       
@@ -39,7 +40,7 @@
       const content = document.querySelector('#content');
       const responseType = document.querySelector('#type');
       const typeSelected = responseType.options[responseType.selectedIndex].value;
-      console.dir(typeSelected);
+      //console.dir(typeSelected);
 
       switch(xhr.status) {
         case 200:
@@ -70,7 +71,7 @@
         parseJSON(xhr, content);
 
       } else if (typeSelected === 'text/xml') {
-        console.dir("type selected xml");
+        //console.dir("type selected xml");
         parseXML(xhr, content);
       }
     };
