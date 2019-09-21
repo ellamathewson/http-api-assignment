@@ -54,22 +54,22 @@ const onRequest = (request, response) => {
       jsonHandler.badRequest(request, response, acceptedTypes, params);
       break;
     case '/unauthorized':
-      jsonHandler.unauthorized(request, response, params);
+      jsonHandler.unauthorized(request, response, acceptedTypes, params);
       break;
     case '/forbidden':
-      jsonHandler.forbidden(request, response);
+      jsonHandler.forbidden(request, response, acceptedTypes);
       break;
     case '/internal':
-      jsonHandler.forbidden(request, response);
+      jsonHandler.forbidden(request, response, acceptedTypes);
       break;
     case '/notImplemented':
-      jsonHandler.notImplemented(request, response);
+      jsonHandler.notImplemented(request, response, acceptedTypes);
       break;
     case '/notFound':
-      jsonHandler.notFound(request, response);
+      jsonHandler.notFound(request, response, acceptedTypes);
       break;
     default:
-      htmlHandler.getIndex(request, response);
+      htmlHandler.getIndex(request, response, acceptedTypes);
       break;
   }
 

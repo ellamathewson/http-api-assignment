@@ -27,9 +27,9 @@
 
         //console.dir("parseXML");
         const p = document.createElement('p');
-        //console.dir(xhr.responseXML);
+        console.dir(xhr.responseXML);
         const message = xhr.responseXML.querySelector('message').textContent;
-        //console.log(xhr.responseXML.documentElement.innerHTML);
+        console.log(xhr.responseXML.documentElement.innerHTML);
         p.textContent = `Message: ${message}`;
         content.appendChild(p);
       
